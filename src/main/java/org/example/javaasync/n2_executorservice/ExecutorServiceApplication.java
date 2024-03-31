@@ -37,19 +37,3 @@ public class ExecutorServiceApplication {
         context.close();
     }
 }
-
-
-//        final ExecutorService executorService = Executors.newCachedThreadPool();
-//        for (int i=0; i<10; i++) {
-//            executorService.submit(() -> service.sendRequest(1, 2));
-//            Thread.sleep(300);
-//        }
-
-
-//        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
-//        for (int i=0; i<10; i++) {
-//            executorService.schedule(() -> service.sendRequest(1, 2), 1000, TimeUnit.MILLISECONDS);
-//        }
-
-
-//해볼것: ExecutorService, Fixed(숫자 바꾸기 10->5), cached, scheduled
