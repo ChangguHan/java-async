@@ -33,8 +33,10 @@ public class CompletableFutureApplication {
 
         final ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i=0; i<10; i++) {
-            CompletableFuture.supplyAsync(() -> service.sendRequest(random.nextInt(100), random.nextInt(100)), executorService)
-                             .thenAccept(t -> log.info(String.valueOf(t)));
+            CompletableFuture.supplyAsync(
+                    () -> service.sendRequest(random.nextInt(100), random.nextInt(100))
+                            , executorService)
+                    .thenAccept(t -> log.info(String.valueOf(t)));
         }
 
         log.info("Main Finished, Elapsed: {}", System.currentTimeMillis() - startTime);

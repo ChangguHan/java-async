@@ -39,13 +39,17 @@ public class SpringAsyncApplication {
         final var startTime = System.currentTimeMillis();
         final var random = new Random();
 
-        final var completableFuture1 = service.sendRequest(random.nextInt(100), random.nextInt(100));
-        final var completableFuture2 = service.sendRequest(random.nextInt(100), random.nextInt(100));
+        for (int i=0; i<10; i++) {
+            service.sendRequest(random.nextInt(100), random.nextInt(100));
+        }
 
-        completableFuture1.thenCombine(completableFuture2,
-                                       (t1, t2) -> service.sendRequest(t1, t2))
-                          .thenCompose(c -> c) // 왜 필요한지 설명
-                          .thenAccept(t -> log.info(String.valueOf(t)));
+//        final var completableFuture1 = service.sendRequestCompletable(random.nextInt(100), random.nextInt(100));
+//        final var completableFuture2 = service.sendRequestCompletable(random.nextInt(100), random.nextInt(100));
+//
+//        completableFuture1.thenCombine(completableFuture2,
+//                                       (t1, t2) -> service.sendRequestCompletable(t1, t2))
+//                          .thenCompose(c -> c)
+//                          .thenAccept(t -> log.info(String.valueOf(t)));
         log.info("Main Finished, Elapsed: {}", System.currentTimeMillis() - startTime);
         context.close();
     }
@@ -71,9 +75,15 @@ public class SpringAsyncApplication {
     @RequiredArgsConstructor
     public static class PlusAsyncService {
         private final PlusService plusService;
+        private final Executor asyncExecutor;
+
         @Async("asyncExecutor")
-        public CompletableFuture<Integer> sendRequest(int param1, int param2) {
-            return CompletableFuture.completedFuture(plusService.sendRequest(param1, param2));
+        public void sendRequest(int param1, int param2) {
+            plusService.sendRequest(param1, param2);
+        }
+
+        public CompletableFuture<Integer> sendRequestCompletable(int param1, int param2) {
+            return CompletableFuture.supplyAsync(() -> plusService.sendRequest(param1, param2), asyncExecutor);
         }
     }
 

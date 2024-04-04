@@ -1,5 +1,6 @@
 package org.example.javaasync.n2_executorservice;
 
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,10 +26,13 @@ public class ExecutorServiceApplication {
         final var context = SpringApplication.run(ExecutorServiceApplication.class, args);
         final PlusService service = context.getBean(PlusService.class);
         final var startTime = System.currentTimeMillis();
+        final var random = new Random();
 
-        final ExecutorService executorService = Executors.newFixedThreadPool(5);
+        final ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i=0; i<10; i++) {
-            executorService.submit(() -> service.sendRequest(1, 2));
+            executorService.submit(
+                    () -> service.sendRequest(random.nextInt(100), random.nextInt(100))
+            );
         }
 
         log.info("Main Finished, Elapsed: {}", System.currentTimeMillis() - startTime);

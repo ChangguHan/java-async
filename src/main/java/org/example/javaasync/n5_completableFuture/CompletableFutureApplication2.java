@@ -32,9 +32,15 @@ public class CompletableFutureApplication2 {
         final var random = new Random();
 
         final ExecutorService executorService = Executors.newFixedThreadPool(5);
-        final var completableFuture1 = CompletableFuture.supplyAsync(() -> service.sendRequest(random.nextInt(100), random.nextInt(100)), executorService);
+        final var completableFuture1 = CompletableFuture.supplyAsync(
+                () -> service.sendRequest(random.nextInt(100), random.nextInt(100))
+                , executorService
+        );
         completableFuture1.thenCompose(
-                t -> CompletableFuture.supplyAsync(() -> service.sendRequest(t, random.nextInt(100)), executorService)
+                t -> CompletableFuture.supplyAsync(
+                        () -> service.sendRequest(t, random.nextInt(100))
+                        , executorService
+                )
         ).thenAccept(t -> log.info(String.valueOf(t)));
 
         log.info("Main Finished, Elapsed: {}", System.currentTimeMillis() - startTime);

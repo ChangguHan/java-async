@@ -1,5 +1,6 @@
 package org.example.javaasync.n3_future;
 
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,10 +30,13 @@ public class FutureApplication {
         final var context = SpringApplication.run(FutureApplication.class, args);
         final PlusService service = context.getBean(PlusService.class);
         final var startTime = System.currentTimeMillis();
+        final var random = new Random();
 
         final ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i=0; i<10; i++) {
-            final Future<Integer> future = executorService.submit(() -> service.sendRequest(1, 2));
+            final Future<Integer> future = executorService.submit(
+                    () -> service.sendRequest(random.nextInt(100), random.nextInt(100))
+            );
             log.info(String.valueOf(future.get()));
         }
 
