@@ -139,9 +139,15 @@ public static class AsyncConfiguration {
 @RequiredArgsConstructor
 public static class PlusAsyncService {
     private final PlusService plusService;
+    private final Executor asyncExecutor;
+
     @Async("asyncExecutor")
-    public CompletableFuture<Integer> sendRequest(int param1, int param2) {
-        return CompletableFuture.completedFuture(plusService.sendRequest(param1, param2));
+    public void sendRequest(int param1, int param2) {
+        plusService.sendRequest(param1, param2);
+    }
+
+    public CompletableFuture<Integer> sendRequestCompletable(int param1, int param2) {
+        return CompletableFuture.supplyAsync(() -> plusService.sendRequest(param1, param2), asyncExecutor);
     }
 }
 ```
