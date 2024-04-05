@@ -28,7 +28,7 @@ public class ExecutorServiceApplication {
         final var startTime = System.currentTimeMillis();
         final var random = new Random();
 
-        final ExecutorService executorService = Executors.newCachedThreadPool();
+        final ExecutorService executorService = Executors.newFixedThreadPool(10);
         for (int i=0; i<10; i++) {
             executorService.submit(
                     () -> service.sendRequest(random.nextInt(100), random.nextInt(100))
